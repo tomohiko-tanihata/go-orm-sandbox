@@ -1,11 +1,22 @@
 -- +migrate Up
-CREATE TABLE users
+CREATE TABLE grades
 (
-    id         SERIAL PRIMARY KEY,
-    name       VARCHAR(255) NOT NULL UNIQUE,
-    gender     VARCHAR(255) NOT NULL,
-    age        INTEGER      NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    id   SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+CREATE TABLE classes
+(
+    id       SERIAL PRIMARY KEY,
+    name     TEXT NOT NULL,
+    grade_id INT REFERENCES grades (id)
+);
+CREATE TABLE students
+(
+    id       SERIAL PRIMARY KEY,
+    name     TEXT NOT NULL,
+    class_id INT REFERENCES classes (id)
 );
 -- +migrate Down
+DROP TABLE students;
+DROP TABLE classes;
+DROP TABLE grades;
