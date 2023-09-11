@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"sqlboiler/models"
 	"strconv"
 
@@ -18,16 +18,23 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+	boil.SetDB(db)
+	ctx := context.Background()
+
 	prepareData(db)
-	students, err := models.Students().All(context.Background(), db)
-	if err != nil {
-		panic(err)
+
+	student, _ := models.Students(
+		qm.Load(qm.Rels(models.StudentRels.Class, models.ClassRels.Grade)),
+		qm.InnerJoin("classes on students.class_id = classes.id"),
+		qm.InnerJoin("grades on classes.grade_id = grades.id"),
+	).All(ctx, db)
+
+	for _, s := range student {
+		println(s.Name)
+		println(s.R.Class.Name)
+		println(s.R.Class.R.Grade.Name)
 	}
 
-	// 結果を表示
-	for _, student := range students {
-		fmt.Printf("Student: %s\n", student.Name)
-	}
 }
 
 func prepareData(db *sql.DB) {

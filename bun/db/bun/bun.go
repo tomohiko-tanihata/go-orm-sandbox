@@ -25,6 +25,7 @@ func Run() {
 		Model(&students).
 		Relation("Class").
 		Relation("Class.Grade").
+		Where("class__grade.id = ?", 1).
 		Scan(ctx)
 
 	if err != nil {
