@@ -1,4 +1,4 @@
-module go-orm-sandbox
+module bun
 
 go 1.20
 

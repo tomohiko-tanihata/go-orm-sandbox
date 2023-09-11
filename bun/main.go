@@ -1,8 +1,6 @@
 package main
 
-import (
-	"go-orm-sandbox/db/bun"
-)
+import "bun/db/bun"
 
 func main() {
 	bun.Run()
